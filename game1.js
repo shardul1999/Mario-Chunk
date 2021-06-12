@@ -32,8 +32,8 @@ function preload(){
     this.load.image("ground","assets/img_ground_top.png");
     this.load.image("background","assets/img_background.png");
     this.load.image("fruit","assets/img_fruit.png");
-    this.load.image("player","assets/img_face.png");
-    //this.load.spritesheet("player","assets/img_player.png",{frameWidth: 32, frameHeight: 48});
+    //this.load.image("player","assets/img_face.png");
+    this.load.spritesheet("player","assets/img_player.png",{frameWidth: 32, frameHeight: 48});
 }
 
 function create(){
@@ -55,13 +55,31 @@ function create(){
       //console.log(ground);
 
       // putting up the player on canvas.
-      this.player=this.physics.add.sprite(100,100,"player");//,4);
-      this.player.setScale(0.1);
+      this.player=this.physics.add.sprite(100,100,"player",4);
+      //this.player.setScale(0.1);
       this.player.setOrigin(0,0);
       this.player.setBounce(0.5);  // 0.5 means everytime the bounce would be reduced by 0.5 so if we keep 1 it'll keep on jumping infinite times.
       // adding a collision detector
       this.physics.add.collider(ground,this.player);
       this.cursors = this.input.keyboard.createCursorKeys();
+      this.anims.create({
+          key: 'left',
+          frames: this.anims.generateFrameNumbers('player',{start:0,end:3}),
+          frameRate: 10,
+          repeat: -1,
+      });
+      this.anims.create({
+        key: 'center',
+        frames: this.anims.generateFrameNumbers('player',{start:4,end:4}),
+        frameRate: 10,
+        repeat: -1,
+    });
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('player',{start:5,end:8}),
+        frameRate: 10,
+        repeat: -1,
+    });
 
       let fruits= this.physics.add.group({
           key: "fruit",
@@ -107,11 +125,20 @@ function create(){
 function update(){
 
     if(this.cursors.left.isDown)
-    this.player.setVelocityX(-player_config.player_speed);
+    {
+        this.player.setVelocityX(-player_config.player_speed);
+        this.player.anims.play('left',true);
+    }
     else if(this.cursors.right.isDown)
-    this.player.setVelocityX(player_config.player_speed);
+    {
+        this.player.setVelocityX(player_config.player_speed);
+        this.player.anims.play('right',true);
+    }
     else 
-    this.player.setVelocityX(0);
+    {
+        this.player.setVelocityX(0);
+        this.player.anims.play('center',true);
+    }
 
     if(this.cursors.up.isDown && this.player.body.touching.down)
     this.player.setVelocityY(player_config.player_jump);
