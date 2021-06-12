@@ -34,6 +34,8 @@ function preload(){
     this.load.image("fruit","assets/img_fruit.png");
     this.load.image("ray","assets/img_ray.png");
     this.load.image("tree","assets/img_tree.png");
+
+    this.load.image("fullscreen","assets/img_fullscreen.png");
     //this.load.image("player","assets/img_face.png");
     this.load.spritesheet("player","assets/img_player.png",{frameWidth: 32, frameHeight: 48});
 }
@@ -169,7 +171,34 @@ function create(){
     this.cameras.main.startFollow(this.player,true,true);
     //this.cameras.main.setZoom(1.5);
     
+    font={
+		font: "bold 15px roboto",
+		align: "center",
+		color: "yellow",
+	}
+	this.gametext=this.add.text(W-100,10,"by Teletubby",font);
+    //console.log(this.gametext);
     
+    var button = this.add.image(800-16, 16, 'fullscreen', 0).setOrigin(1, 0).setInteractive();
+
+        button.on('pointerup', function () {
+
+            if (this.scale.isFullscreen)
+            {
+                button.setFrame(0);
+
+                this.scale.stopFullscreen();
+            }
+            else
+            {
+                button.setFrame(1);
+
+                this.scale.startFullscreen();
+            }
+
+        }, this);
+        button.setScale(0.1);
+        button.setPosition(65,10);
 }
 
 function update(){
