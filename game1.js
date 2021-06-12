@@ -81,14 +81,14 @@ function create(){
         repeat: -1,
     });
 
-      let fruits= this.physics.add.group({
+    let fruits= this.physics.add.group({
           key: "fruit",
           repeat: 7,
           setScale:{x:0.2,y:0.2},
           setXY: {x:50,y:0,stepX:100}
       });
       this.physics.add.collider(ground,fruits);
-      //fruits.setBounce(0.5);
+        //fruits.setBounce(0.5);
     fruits.children.iterate(function (f){
         f.setBounce(Phaser.Math.FloatBetween(0.4,0.7))
     });
@@ -119,6 +119,16 @@ function create(){
     //     f.body.immovable=true;
     // });
     this.physics.add.collider(other_ground,this.player);
+
+    this.physics.add.overlap(this.player,fruits,eat_fruit,null,this);
+    this.player.setCollideWorldBounds(true);
+
+    this.cameras.main.setBounds(0,0,W,H);
+    this.physics.world.setBounds(0,0,W,H);
+
+    this.cameras.main.startFollow(this.player,true,true);
+    this.cameras.main.setZoom(1.5);
+    
     
 }
 
@@ -139,7 +149,12 @@ function update(){
         this.player.setVelocityX(0);
         this.player.anims.play('center',true);
     }
-
     if(this.cursors.up.isDown && this.player.body.touching.down)
     this.player.setVelocityY(player_config.player_jump);
+}
+
+
+function eat_fruit(player,fruits)
+{
+    fruits.disableBody(true,true);
 }
