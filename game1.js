@@ -32,6 +32,8 @@ function preload(){
     this.load.image("ground","assets/img_ground_top.png");
     this.load.image("background","assets/img_background.png");
     this.load.image("fruit","assets/img_fruit.png");
+    this.load.image("ray","assets/img_ray.png");
+    this.load.image("tree","assets/img_tree.png");
     //this.load.image("player","assets/img_face.png");
     this.load.spritesheet("player","assets/img_player.png",{frameWidth: 32, frameHeight: 48});
 }
@@ -44,6 +46,39 @@ function create(){
       background.displayWidth=W;
       background.setOrigin(0,0);
 
+      let rays=[];
+      for(let i=-10;i<=10;i++)
+      {
+          let ray=this.add.sprite(W/2,H-100,'ray');
+           ray.displayHeight=1.2*H;
+           ray.setOrigin(0.5,1);
+           ray.alpha=0.2;
+           ray.angle=i*20;
+         //  ray.depth=-1;
+           rays.push(ray);
+      }
+      this.tweens.add({
+          targets: rays,
+          props: {
+              angle:{
+                  value: "+=20"
+              },
+          },
+          duration: 8000,
+          repeat: -1,
+      });
+
+
+      let tree=this.add.sprite(100,H-139,"tree");
+      tree.setScale(0.2);
+
+
+      let tree1=this.add.sprite(350,H-154,"tree");
+      tree1.setScale(0.35);
+
+      let tree2=this.add.sprite(800,H-145,"tree");
+      tree2.setScale(0.3);
+
       // shifted below background statements as it was overlapping with the background.
       // Or we can put up a statement background.depth=-1 this will keep the background to the back only.
       let ground=this.add.tileSprite(0,H-100,W,100,"ground");
@@ -52,7 +87,11 @@ function create(){
       this.physics.add.existing(ground);
       ground.body.allowGravity=false;
       ground.body.immovable=true;  // more like adding mass to the ground
-      //console.log(ground);
+      //console.log(ground);   
+      
+
+
+
 
       // putting up the player on canvas.
       this.player=this.physics.add.sprite(100,100,"player",4);
@@ -118,6 +157,7 @@ function create(){
     //     f.body.allowGravity=false,
     //     f.body.immovable=true;
     // });
+
     this.physics.add.collider(other_ground,this.player);
 
     this.physics.add.overlap(this.player,fruits,eat_fruit,null,this);
@@ -127,7 +167,7 @@ function create(){
     this.physics.world.setBounds(0,0,W,H);
 
     this.cameras.main.startFollow(this.player,true,true);
-    this.cameras.main.setZoom(1.5);
+    //this.cameras.main.setZoom(1.5);
     
     
 }
